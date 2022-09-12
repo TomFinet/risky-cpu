@@ -8,7 +8,7 @@ Roadmap:
 --------
 
 1. Design CPU RTL diagram on paper with all control signals for all instructions. First operate under assumption that 1 instruction per cycle.
-2. Then pipeline the CPU.
+2. Then pipeline the CPU, use stalling for data-hazards.
 3. Add an MMU and virtual memory support.
 4. Code an assembler.
 5. Code a bootloader.
