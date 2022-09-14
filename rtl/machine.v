@@ -3,7 +3,6 @@
 
 module machine;
 
-	
     // instantiate clock
     wire clock_enable=1;
     reg clock;
