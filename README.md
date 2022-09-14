@@ -23,6 +23,6 @@ The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR
 
 ## Bibliography:
 
-[https://github.com/riscv/riscv-isa-manual/releases/tag/draft-20220723-10eea63][RISC-V specifications]
+[RISC-V specifications](https://github.com/riscv/riscv-isa-manual/releases/tag/draft-20220723-10eea63)
 
-[https://youtu.be/R0tFDXBZvKI][MIT 6.004 Computational Structures, Spring 2017, Lectures]
+[MIT 6.004 Computational Structures, Spring 2017, Lectures](https://youtu.be/R0tFDXBZvKI)
