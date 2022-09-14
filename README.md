@@ -4,14 +4,13 @@ This project defines a Verilog model for a CPU which implements a subset of the 
 
 <img src='./cpu_block_diagram.jpg'/>
 
-The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR), arithmetic (ALU), memory (MEM) and write-back (WB). Data and control hazards are handled by stalling. For the case of control hazards, when a branch instruction is detected, we stall the pipeline until its outcome is determined in the ALU stage. This is achieved by inserting two NOP operations into the pipeline.
+The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR), arithmetic (ALU), memory (MEM) and write-back (WB). Data and control hazards are handled by stalling. For the case of control hazards, when a branch or jump instruction is detected, we stall the pipeline until its outcome is determined in the ALU stage. This is achieved by inserting two NOP operations into the pipeline.
 
 ## Current tasks:
 
-
-1. Handle hazards. Doing
-2. Handle exceptions.
-3. Handle interrupts.
+1. Handle exceptions.
+2. Handle interrupts.
+3. Write verilator testbenches.
 
 ## Roadmap:
 
