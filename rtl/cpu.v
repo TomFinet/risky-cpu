@@ -115,19 +115,5 @@ module cpu (
         instr_reg = Din; // 
     end
 
-    /* Decode */
-    always @(posedge clock) begin
-        decoder_enable = 1;
-        instruction = instr_reg;
-
-            
-    end
-
-    /* Execute */
-    always @(posedge clock) begin
-        
-
-
-    end
 
 endmodule
