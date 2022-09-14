@@ -42,12 +42,16 @@ function = {
     "xori"  : 0b101,
     "slli"  : 0b110,
     "srli"  : 0b111,
-    "srai"  : 0b001,
+    "srai"  : 0b000,
 
-    "beq"   : 0b000,
-    "bne"   : 0b001,
-    "blt"   : 0b010,
-    "bge"   : 0b011,
+    "beq"   : 0b010,
+    "bne"   : 0b011,
+    "ble"   : 0b100,
+    "bleu"  : 0b101,
+
+    "blt"   : 0b001,
+    "bltu"  : 0b010,
+    
 
     "lw"    : 0b000,
     "lh"    : 0b001,
@@ -60,7 +64,7 @@ function = {
     "sb"    : 0b010
 }
 
-# mapping of meaningful register names to addresses
+# mapping of meaningfull register names to addresses
 reg = {
     "zero" : 0b00000, # this register is hard-wired to 0 
     "ra"   : 0b00001, # return address
@@ -355,7 +359,7 @@ with open(progf) as f:
                 
                 inst = build_J_type([
                     offset,
-                    0,
+                    reg["zero"],
                     opcode["jal"]
                 ])
 
