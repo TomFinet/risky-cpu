@@ -18,6 +18,10 @@ reg [31:0] mem[1023:0];
 
 integer i;
 
+initial begin
+    $readmemh("memory.list", mem);
+end
+
 always @(posedge clock) begin
     inst_dout <= mem[inst_ain];
 
