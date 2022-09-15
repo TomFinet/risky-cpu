@@ -1,3 +1,5 @@
+`ifndef REG_BANK
+`define REG_BANK
 /* 
  * Provides two combinational read ports and a sequential write port. 
  */
@@ -10,11 +12,11 @@ module register_bank(
 	input [31:0] din,
 
 	// read both of these registers
-	input [4:0] rs,
-	input [4:0] ra,
+	input [4:0] rs1,
+	input [4:0] rs2,
 
-	output wire [31:0] rs_val,
-	output wire [31:0] ra_val,
+	output wire [31:0] rs1_val,
+	output wire [31:0] rs2_val
 );
 
 	/*
@@ -27,8 +29,8 @@ module register_bank(
 	 */
 	reg[31:0] r[31:0];
 
-    assign rs_val = r[rs];
-    assign ra_val = r[ra];
+    assign rs1_val = r[rs1];
+    assign rs2_val = r[rs2];
 
 	always @(posedge clock) begin
 		if(we) begin
@@ -37,3 +39,5 @@ module register_bank(
 	end
 
 endmodule
+
+`endif

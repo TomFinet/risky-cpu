@@ -1,3 +1,6 @@
+`ifndef CPU
+`define CPU
+
 `include "./rtl/codes.v"
 `include "./rtl/if/pc.v"
 `include "./rtl/register_bank.v"
@@ -21,7 +24,7 @@ module cpu (
     output reg mem_rw,
     output reg [31:0] mem_aout,
     output reg [31:0] mem_dout,
-    input [31:0] mem_din,
+    input [31:0] mem_din
 );
 
     /* PC pipeline registers */
@@ -53,15 +56,15 @@ module cpu (
     reg stall;
     
     /* Other signals */
-    wire [31:0] branch_res;
-    wire [31:0] branch;
+    reg [31:0] branch_res;
+    reg [31:0] branch;
     reg [31:0] jal;
     reg [31:0] jalr;
 
     /* program counter */    
-    reg pc;
+    reg [31:0] pc;
 
-    pc pc (
+    pc pc_module (
         .clock  ( clock ),
         .reset  ( reset ),
         .load   ( pc_load ),
@@ -79,53 +82,53 @@ module cpu (
     reg [4:0] rs2;
     reg [31:0] rr_imm;
 
-    rr_decoder rr_decoder (
+    rr_decoder rr_decoder_module (
         .clock  ( clock ),
         
         .inst   ( ir_pipe[0] ),
 
         .rs1    ( rs1 ),
         .rs2    ( rs2 ),
-        .imm    ( imm ),
+        .imm    ( rr_imm ),
 
         .pc_sel ( pc_sel ),
         .a_sel  ( a_sel ),
-        .b_sel  ( b_sel ),
+        .b_sel  ( b_sel )
     );
 
     /* ALU decoder */
     reg [31:0] alu_imm;
-    reg [31:0] alu_op;
+    reg [3:0] alu_op;
 
-    alu_decoder alu_decoder (
+    alu_decoder alu_decoder_module (
         .clock  ( clock ),
 
         .inst   ( ir_pipe[1] ),
 
         .imm    ( alu_imm ),
 
-        .alu_op ( alu_op ),
+        .alu_op ( alu_op )
     );
 
     /* MEM decoder */
-    mem_decoder mem_decoder (
+    mem_decoder mem_decoder_module (
         .clock     ( clock ),
 
         .inst      ( ir_pipe[2] ),
 
         .rw        ( mem_rw ),
-        .store_sel ( store_sel ),
+        .store_sel ( store_sel )
     );
 
     /* WB decoder */
-    wb_decoder wb_decoder (
+    wb_decoder wb_decoder_module (
         .clock    ( clock ),
 
         .inst     ( ir_pipe[3] ),
 
         .load_sel ( load_sel ),
         .reg_we   ( reg_we ),
-        .reg_sel  ( reg_sel ),
+        .reg_sel  ( reg_sel )
     );
 
     /* Instantiate register bank */
@@ -135,7 +138,7 @@ module cpu (
     reg [31:0] rs1_val;
     reg [31:0] rs2_val;
 
-    register_bank register_bank (
+    register_bank register_bank_module (
         .clock   ( clock ),
 
         .we      ( reg_we ),
@@ -146,23 +149,24 @@ module cpu (
         .rs2     ( rs2 ),
 
         .rs1_val ( rs1_val ),
-        .rs2_val ( rs2_val ),
+        .rs2_val ( rs2_val )
     );
 
     /* Instantiate ALU */
     reg [31:0] a;
     reg [31:0] b;
     reg [31:0] alu_res;
+    reg cond;
 
-    alu alu (
+    alu alu_module (
         .clock  ( clock ),
-        .enable ( alu_op ),
 
         .alu_op ( alu_op ),
         .a      ( a_pipe ),
         .b      ( b_pipe ),
 
-        .res    ( alu_res )
+        .res    ( alu_res ),
+        .cond   ( cond )
     );
 
     assign branch = alu_imm + pc_pipe[1];
@@ -170,34 +174,35 @@ module cpu (
     /* a select mux */
     always @(a_sel, pc_pipe[0], rs1_val) begin
         case (a_sel)
-            A_PC:   a = pc_pipe[0];
-            A_REG:  a = rs1_val;
-            default a = 0;
+            `A_PC:   a = pc_pipe[0];
+            `A_REG:  a = rs1_val;
+            default  a = 0;
         endcase
     end
 
     /* b select mux */
     always @(b_sel, rr_imm, rs2_val) begin
         case (b_sel)
-            B_IMM: b = rr_imm;
-            B_REG: b = rs2_val;
+            `B_IMM: b = rr_imm;
+            `B_REG: b = rs2_val;
         endcase
     end
 
     /* b select mux */
     always @(reg_sel, pc_pipe[3], mem_din, r_pipe[1]) begin
         case (reg_sel)
-            REG_PC_PLUS_4: reg_din = pc_pipe[3] + 4;
-            REG_RES:       reg_din = r_pipe[1];
-            REG_MEM:       reg_din = mem_din;
+            `REG_PC_PLUS_4: reg_din = pc_pipe[3] + 4;
+            `REG_RES:       reg_din = r_pipe[1];
+            `REG_MEM:       reg_din = mem_din;
+            default:        reg_din = r_pipe[1];
         endcase
     end
 
     /* branch select mux */
     always @(branch_sel, branch, pc) begin
         case (branch_sel)
-            BRANCH:    branch_res = branch;
-            NO_BRANCH: branch_res = pc + 4;
+            `YES_BRANCH: branch_res = branch;
+            `NO_BRANCH:  branch_res = pc + 4;
         endcase
     end
 
@@ -224,3 +229,5 @@ module cpu (
 
 
 endmodule
+
+`endif

@@ -1,35 +1,41 @@
-`include "../codes.v"
+`ifndef ALU_DECODER
+`define ALU_DECODER
 
-module rr_decoder (
+`include "./rtl/codes.v"
+
+module alu_decoder (
     input clock,
 
     input [31:0] inst,
 
     output reg [31:0] imm,
 
-    output reg [3:0] alu_op,
+    output reg [3:0] alu_op
 );
 
 always @(posedge clock) begin
 
     case (inst[6:0])
-        OP_IMM:  alu_op <= {inst[30], inst[14:12]};
-        OP:      alu_op <= {inst[30], inst[14:12]}; 
+        `OP_IMM:  alu_op <= {inst[30], inst[14:12]};
+        `OP:      alu_op <= {inst[30], inst[14:12]}; 
 
-        BRANCH: 
+        `BRANCH: begin
             if (
-                    inst[14:12] === BLT[3:1] || 
-                    inst[14:12] === BLTU[3:1]
+                    inst[14:12] === 3'b001 || 
+                    inst[14:12] === 3'b010
                 ) begin
-                    func <= {1'b0, inst[14:12]};
+                    alu_op <= {1'b0, inst[14:12]};
                 end
                 else begin
-                    func <= {1'b1, inst[14:12]}
+                    alu_op <= {1'b1, inst[14:12]};
                 end
-
-        default: alu_op <= ADD;
+        end
+        
+        default: alu_op <= `ADD;
     endcase
 
 end
 
 endmodule
+
+`endif

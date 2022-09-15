@@ -1,4 +1,7 @@
-`include "../codes.v"
+`ifndef RR_DECODER
+`define RR_DECODER
+
+`include "./rtl/codes.v"
 
 module rr_decoder (
     input clock,
@@ -11,49 +14,53 @@ module rr_decoder (
 
     output reg [1:0]  pc_sel,
     output reg [1:0]  a_sel,
-    output reg        b_sel,
+    output reg        b_sel
 );
 
 always @(posedge clock) begin
 
     case (inst[6:0])
-        OP_IMM:
+        `OP_IMM: begin
             rs1 <= inst[11:7];
 
-            if (inst[14:12] === SRA[3:1]) begin
-                imm <= {{27{1'b0}}, inst[24:20]}
+            if (inst[14:12] === 3'b000) begin
+                imm <= {{27{1'b0}}, inst[24:20]};
             end
             else begin
                 imm <= {{20{inst[31]}}, inst[31:20]};
             end
 
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_REG;
-            b_sel  <= B_IMM;
-        
-        OP:
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_IMM;
+        end
+
+        `OP: begin
             rs1    <= inst[19:15];
             rs2    <= inst[24:20];
             
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_REG;
-            b_sel  <= B_REG;
-        
-        LUI:
-            imm    <= {inst[31:12], {12{0}}};
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_REG;
+        end
 
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_0;
-            b_sel  <= B_IMM;
+        `LUI: begin
+            imm    <= {inst[31:12], {12{1'b0}}};
 
-        AUIPC:
-            imm    <= {inst[31:12], {12{0}}};
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_0;
+            b_sel  <= `B_IMM;
+        end
 
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_PC;
-            b_sel  <= B_IMM;
-        
-        JAL:
+        `AUIPC: begin
+            imm    <= {inst[31:12], {12{1'b0}}};
+
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_PC;
+            b_sel  <= `B_IMM;
+        end
+
+        `JAL: begin
             imm    <= {    
                         {12{inst[31]}},
                         inst[19:12],
@@ -62,19 +69,21 @@ always @(posedge clock) begin
                         1'b0
                     };
             
-            pc_sel <= PC_JAL;
-            a_sel  <= A_PC;
-            b_sel  <= B_IMM;
+            pc_sel <= `PC_JAL;
+            a_sel  <= `A_PC;
+            b_sel  <= `B_IMM;
+        end
 
-        JALR:
+        `JALR: begin
             rs1    <= inst[19:15];
             imm    <= {{20{inst[31]}}, inst[31:20]};
 
-            pc_sel <= PC_JALR;
-            a_sel  <= A_REG;
-            b_sel  <= B_IMM;
+            pc_sel <= `PC_JALR;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_IMM;
+        end
 
-        BRANCH:
+        `BRANCH: begin
             rs1    <= inst[19:15];
             rs2    <= inst[24:20];
             imm    <= {
@@ -85,19 +94,21 @@ always @(posedge clock) begin
                         1'b0
                     };
             
-            pc_sel <= PC_BRANCH;
-            a_sel  <= A_REG;
-            b_sel  <= B_REG;
+            pc_sel <= `PC_BRANCH;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_REG;
+        end
 
-        LOAD:
+        `LOAD: begin
             rs1    <= inst[19:15];
             imm    <= {{20{inst[31]}}, inst[31:20]};
 
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_REG;
-            b_sel  <= B_IMM;
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_IMM;
+        end
 
-        STORE:
+        `STORE: begin
             rs1    <= inst[19:15];
             rs2    <= inst[24:20];
             imm    <= {
@@ -107,13 +118,17 @@ always @(posedge clock) begin
                             inst[7]
                         };
 
-            pc_sel <= PC_PLUS_4;
-            a_sel  <= A_REG;
-            b_sel  <= B_IMM;
+            pc_sel <= `PC_PLUS_4;
+            a_sel  <= `A_REG;
+            b_sel  <= `B_IMM;
+        end
+        
+        default: pc_sel <= `PC_PLUS_4; // could modify to call exception
 
-        default: 
     endcase
 
 end
 
 endmodule
+
+`endif

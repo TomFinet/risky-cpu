@@ -1,21 +1,24 @@
-`include "cpu.v"
-`include "memory.v"
+`ifndef MACHINE
+`define MACHINE
+
+`include "./rtl/cpu.v"
+`include "./rtl/memory.v"
 
 module machine (
     input clock,
     input reset,
-    input halt,
+    input halt
 );
 
-    reg [31:0] inst_aout,
-    reg [31:0] inst_din,
+    reg [31:0] inst_aout;
+    reg [31:0] inst_din;
 
-    reg mem_rw,
-    reg [31:0] mem_aout,
-    reg [31:0] mem_dout,
-    reg [31:0] mem_din,
+    reg mem_rw;
+    reg [31:0] mem_aout;
+    reg [31:0] mem_dout;
+    reg [31:0] mem_din;
 
-	cpu cpu (
+	cpu cpu_module (
 		.reset     ( reset ),
 		.halt      ( halt ),
 		.clock     ( clock ),
@@ -26,12 +29,11 @@ module machine (
 	    .mem_rw    ( mem_rw ),
         .mem_aout  ( mem_aout ),
         .mem_dout  ( mem_dout ),
-        .mem_din   ( mem_din ),
+        .mem_din   ( mem_din )
     );
 
-    memory memory (
+    memory memory_module (
         .clock     ( clock ),
-        .reset     ( reset ),
         
         .inst_ain  ( inst_aout ),
         .inst_dout ( inst_din ),
@@ -40,8 +42,10 @@ module machine (
         .ain       ( mem_aout ),
         .din       ( mem_dout ),
 
-        .dout      ( mem_din ),
+        .dout      ( mem_din )
     );
 
 
 endmodule
+
+`endif

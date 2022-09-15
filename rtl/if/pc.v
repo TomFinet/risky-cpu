@@ -1,4 +1,7 @@
-`include "../codes.v"
+`ifndef PC
+`define PC
+
+`include "./rtl/codes.v"
 
 module pc (
     input clock,
@@ -10,7 +13,7 @@ module pc (
     input [31:0] jalr,
     input [31:0] branch,
 
-    output reg [31:0] pc,
+    output reg [31:0] pc
 );
 
 always @(posedge clock) begin
@@ -19,12 +22,14 @@ always @(posedge clock) begin
     end
     else if(load) begin
         case (pc_sel)
-            PC_PLUS_4 : pc <= pc + 4;
-            PC_JAL    : pc <= jal;
-            PC_JALR   : pc <= jalr;
-            PC_BRANCH : pc <= branch;
+            `PC_PLUS_4 : pc <= pc + 4;
+            `PC_JAL    : pc <= jal;
+            `PC_JALR   : pc <= jalr;
+            `PC_BRANCH : pc <= branch;
         endcase
     end
 end
 
 endmodule
+
+`endif
