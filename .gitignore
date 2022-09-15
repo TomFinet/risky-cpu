@@ -1,7 +1,5 @@
 obj_dir/
-
-/.stamp.verilate
-
+*.verilate
 *.vcd
-
 *.json
+*.list
