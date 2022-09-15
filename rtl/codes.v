@@ -11,6 +11,17 @@
 `define MISC_MEM 7'b0001001
 `define SYSTEM   7'b0001010
 
+// Mem functions
+`define LW  3'b000
+`define LH  3'b001
+`define LHU 3'b010
+`define LB  3'b011
+`define LBU 3'b100
+
+`define SW 3'b000
+`define SH 3'b001
+`define SB 3'b010
+
 // ALU functions
 `define ADD  4'b0000
 `define LT   4'b0001
@@ -28,32 +39,48 @@
 `define GEU  4'b1101
 
 // PC select
-`define PC_PLUS_4       3
-`define PC_PLUS_IMM     2
-`define PC_REG_PLUS_IMM 1
-`define PC_BRANCH       0
+`define PC_PLUS_4 2'b00
+`define PC_JAL    2'b01
+`define PC_JALR   2'b10
+`define PC_BRANCH 2'b11
 
 // Register write enable
-`define REG_WRITE    1
-`define REG_NO_WRITE 0
+`define REG_NO_WRITE 1'b0
+`define REG_WRITE    1'b1
 
 // Register write-back select
-`define REG_RES        0
-`define REG_PC_PLUS_4  1
-`define REG_IMM        2
-`define REG_RAM        3
+`define REG_RES        2'b00
+`define REG_PC_PLUS_4  2'b01
+`define REG_MEM        2'b10
+
+// a select
+`define A_0   2'b00
+`define A_PC  2'b01
+`define A_REG 2'b10
 
 // b select
-`define B_IMM 0
-`define B_REG 1
+`define B_IMM 1'b0
+`define B_REG 1'b1
 
 // lui select
-`define LUI_0  0
-`define LUI_PC 1
+`define LUI_0  1'b0
+`define LUI_PC 1'b1
 
 // main memory control
-`define MEM_READ  0
-`define MEM_WRITE 1
+`define MEM_READ  1'b0
+`define MEM_WRITE 1'b1
 
-`define MEM_NOT_ENABLE 0
-`define MEM_ENABLE     1
+`define MEM_NOT_ENABLE 1'b0
+`define MEM_ENABLE     1'b1
+
+// store select
+`define STORE_W 0
+`define STORE_H 1
+`define STORE_B 2
+
+// load select
+`define LOAD_W  0
+`define LOAD_H  1
+`define LOAD_HU 2
+`define LOAD_B  3
+`define LOAD_BU 4
