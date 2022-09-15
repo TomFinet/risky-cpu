@@ -1,53 +1,46 @@
 `include "cpu.v"
 `include "memory.v"
 
-module machine;
+module machine (
+    input clock,
+    input reset,
+    input halt,
+);
 
-    // instantiate clock
-    wire clock_enable=1;
-    reg clock;
+    reg [31:0] inst_aout,
+    reg [31:0] inst_din,
 
-    clock clock (
-        .enable ( clock_enable ),
-        
-        .clock  ( clock ),
-    );
-
-    reg [31:0] A;
-    reg [31:0] Din;
-    reg [31:0] Dout;
-
-    // instantiate cpu
-
-    reg reset;
-    reg halt;
+    reg mem_rw,
+    reg [31:0] mem_aout,
+    reg [31:0] mem_dout,
+    reg [31:0] mem_din,
 
 	cpu cpu (
-		.reset ( reset ),
-		.halt  ( halt ),
-		.clock ( clock ),
+		.reset     ( reset ),
+		.halt      ( halt ),
+		.clock     ( clock ),
 
-		.Din   ( Din ),
+        .inst_aout ( inst_aout ),
+        .inst_din  ( inst_din ),
 
-		.A     ( A ),
-		.Dout  ( Dout )
-	);
-
-	// instantiate BRAM
-    reg mem_enable;
-    reg mem_reset;
-    reg mem_rw;
+	    .mem_rw    ( mem_rw ),
+        .mem_aout  ( mem_aout ),
+        .mem_dout  ( mem_dout ),
+        .mem_din   ( mem_din ),
+    );
 
     memory memory (
-        .clock  ( clock ),
-        .enable ( mem_enable ),
-        .reset  ( mem_reset ),
+        .clock     ( clock ),
+        .reset     ( reset ),
+        
+        .inst_ain  ( inst_aout ),
+        .inst_dout ( inst_din ),
 
-        .rw     ( mem_rw ),
-        .ain    ( A ),
-        .din    ( Dout ),
+        .rw        ( mem_rw ),
+        .ain       ( mem_aout ),
+        .din       ( mem_dout ),
 
-        .dout   ( Din ),
+        .dout      ( mem_din ),
     );
 
 
