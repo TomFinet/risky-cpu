@@ -1,7 +1,13 @@
-`include "./rtl/pc.v"
+`include "./rtl/lib/register.v"
+`include "./rtl/if/pc.v"
 `include "./rtl/register_bank.v"
-`include "./rtl/decoder.v"
-`include "./rtl/alu.v"
+
+`include "./rtl/rr/rr_decoder.v"
+`include "./rtl/alu/alu_decoder.v"
+`include "./rtl/mem/mem_decoder.v"
+`include "./rtl/wb/wb_decoder.v"
+
+`include "./rtl/alu/alu.v"
 
 
 module cpu (
@@ -9,82 +15,115 @@ module cpu (
     input halt,
     input clock,
 
-    input reg [31:0] Din,
+    output reg [31:0] inst_aout,
+    input [31:0] inst_din,
 
-    output reg [31:0] A,
-    output reg [31:0] Dout
+    output reg mem_rw,
+    output reg [31:0] mem_aout,
+    output reg [31:0] mem_dout,
+    input [31:0] mem_din,
 );
 
     /* program counter */
-
-    reg pc_reset;
-    reg pc_enable;
-    reg pc_out;
+    reg pc_load;
+    reg [1:0] pc_sel;
+    reg pc;
 
     pc pc (
         .clock  ( clock ),
-        .reset  ( pc_reset ),
-        .enable ( pc_enable ),
+        .reset  ( reset ),
+        .load   ( pc_load ),
 
-        .dout   ( pc_out )
+        .pc_sel ( pc_sel ),
+        .jal    (  ),
+        .jalr   (  ),
+        .branch (  ),
+
+        .pc     ( pc )
     );
 
-    /* address register */
-    reg [31:0] addr_reg;
+    /* PC pipeline registers */
+    reg [31:0] pc_pipe[3:0];
 
-    /* instruction register */
-    reg [31:0] instr_reg;
+    /* IR pipeline registers */
+    reg [31:0] ir_pipe[3:0];
 
-    /* instantiate decoder/control unit */
-    reg decoder_enable;
-    
-    reg [2:0] instr_func;
-    reg [11:0] instr_imm;
-    reg [4:0] instr_rs;
-    reg [4:0] instr_ra;
-    reg [4:0] instr_rd;
+    /* Data pipeline registers */
+    reg [31:0] d_pipe[1:0];
+    reg [31:0] a_pipe;
+    reg [31:0] b_pipe;
+    reg [31:0] r_pipe[1:0];
+     
+    /* RR decoder */
+    rr_decoder rr_decoder (
+        .clock  ( clock ),
+        
+        .inst   ( ir_pipe[0] ),
 
-    decoder decoder (
-        .clock       ( clock ),
-        .enable      ( decoder_enable ),
+        .rs1    (  ),
+        .rs2    (  ),
+        .imm    (  ),
 
-        .instruction ( instr_reg ),
+        .pc_sel ( pc_sel ),
+        .a_sel  (  ),
+        .b_sel  (  ),
+    );
 
-        .func        ( instr_func ),
-        .imm         ( instr_imm ),
-        .rd          ( instr_rd ),
-        .rs          ( instr_rs ),
+    /* ALU decoder */
+    alu_decoder alu_decoder (
+        .clock  ( clock ),
 
-        .reg_we      ( reg_we )
+        .inst   ( ir_pipe[1] ),
+
+        .imm    (  ),
+
+        .alu_op (  ),
+    );
+
+    /* MEM decoder */
+    mem_decoder mem_decoder (
+        .clock     ( clock ),
+
+        .inst      ( ir_pipe[2] ),
+
+        .rw        (  ),
+        .store_sel (  ),
+    );
+
+    /* WB decoder */
+    wb_decoder wb_decoder (
+        .clock    ( clock ),
+
+        .inst     ( ir_pipe[3] ),
+
+        .load_sel (  ),
+        .reg_we   (  ),
+        .reg_sel  (  ),
     );
 
     /* Instantiate register bank */
-    reg reg_enable;
-
-    reg reg_re;
-    reg [31:0] reg_din;
+    reg reg_we;
     reg [4:0] reg_ain;
+    reg [31:0] reg_din;
 
-    reg [31:0] reg_dout;
+    reg [4:0] rs1;
+    reg [4:0] rs2;
 
-    reg [31:0] rs_val;
-    reg [31:0] ra_val;
+    reg [31:0] rs1_val;
+    reg [31:0] rs2_val;
 
     register_bank register_bank (
-        .clock ( clock ),
-        .enable ( reg_enable ),
+        .clock   ( clock ),
 
-        .we     ( reg_rw ),
-        .din    ( reg_din ),
-        .ain    ( reg_ain ),
+        .we      ( reg_we ),
+        .ain     ( reg_ain ),
+        .din     ( reg_din ),
+        
+        .rs1     ( rs1 ),
+        .rs2     ( rs2 ),
 
-        .rs     ( instr_rs ),
-        .ra     ( instr_ra ),
-
-        .dout   ( reg_dout ),
-
-        .rs_val ( rs_val ),
-        .ra_val ( ra_val )
+        .rs1_val ( rs1_val ),
+        .rs2_val ( rs2_val ),
     );
 
     /* Instantiate ALU */
@@ -100,20 +139,6 @@ module cpu (
 
         .res    ( alu_res )
     );
-
-    /* Reset */
-    always @(posedge reset) begin
-        pc_reset = 1;
-        addr_reg = 0;
-        instr_reg = 0;
-    end
-
-    /* Fetch */
-    always @(posedge clock) begin
-        addr_reg  = pc; // needs to be decided by a MUX when we add further instructions.
-        A         = addr_reg;
-        instr_reg = Din; // 
-    end
 
 
 endmodule
