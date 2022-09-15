@@ -24,6 +24,18 @@ module cpu (
     input [31:0] mem_din,
 );
 
+    /* PC pipeline registers */
+    reg [31:0] pc_pipe[3:0];
+
+    /* IR pipeline registers */
+    reg [31:0] ir_pipe[3:0];
+
+    /* Data pipeline registers */
+    reg [31:0] d_pipe[1:0];
+    reg [31:0] a_pipe;
+    reg [31:0] b_pipe;
+    reg [31:0] r_pipe[1:0];
+
     /* program counter */
     reg pc_load;
     reg [1:0] pc_sel;
@@ -41,18 +53,6 @@ module cpu (
 
         .pc     ( pc )
     );
-
-    /* PC pipeline registers */
-    reg [31:0] pc_pipe[3:0];
-
-    /* IR pipeline registers */
-    reg [31:0] ir_pipe[3:0];
-
-    /* Data pipeline registers */
-    reg [31:0] d_pipe[1:0];
-    reg [31:0] a_pipe;
-    reg [31:0] b_pipe;
-    reg [31:0] r_pipe[1:0];
      
     /* RR decoder */
     rr_decoder rr_decoder (
@@ -127,6 +127,8 @@ module cpu (
     );
 
     /* Instantiate ALU */
+    reg [31:0] a;
+    reg [31:0] b;
     reg [31:0] alu_res;
 
     alu alu (
@@ -134,11 +136,34 @@ module cpu (
         .enable ( alu_op ),
 
         .func   ( instr_func ),
-        .a      ( rs_val ),
-        .b      ( ra_val ),
+        .a      ( a_pipe ),
+        .b      ( b_pipe ),
 
         .res    ( alu_res )
     );
+
+    
+
+    always @(posedge clock) begin
+        pc_pipe[0] <= pc;
+        pc_pipe[1] <= pc_pipe[0];
+        pc_pipe[2] <= pc_pipe[1];
+        pc_pipe[3] <= pc_pipe[2];
+
+        ir_pipe[0] <= inst_din;
+        ir_pipe[1] <= ir_pipe[0];
+        ir_pipe[2] <= ir_pipe[1];
+        ir_pipe[3] <= ir_pipe[2];
+
+        d_pipe[0]  <= rs2_val;
+        d_pipe[1]  <= d_pipe[0];
+
+        a_pipe     <= a;
+        b_pipe     <= b;
+
+        r_pipe[0]  <= alu_res;
+        r_pipe[1]  <= r_pipe[0];  
+    end
 
 
 endmodule
