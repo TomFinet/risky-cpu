@@ -5,8 +5,8 @@
 module register_bank(
 	input clock,
 
-	input we,
-	input [4:0] ain,
+	input        we,
+	input [4:0]  ain,
 	input [31:0] din,
 
 	// read both of these registers
