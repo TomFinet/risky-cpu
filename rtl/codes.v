@@ -1,3 +1,6 @@
+`ifndef CODES
+`define CODES
+
 // Opcodes
 `define OP_IMM   7'b0000000
 `define OP       7'b0000001
@@ -86,8 +89,10 @@
 `define LOAD_BU 4
 
 // branch select
-`define NO_BRANCH 1'b0
-`define BRANCH    1'b1
+`define NO_BRANCH  1'b0
+`define YES_BRANCH 1'b1
 
 // NOP instruction encoding
 `define NOP 32'b00000000000000000000000000000000
+
+`endif
