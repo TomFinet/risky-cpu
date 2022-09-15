@@ -8,9 +8,9 @@ The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR
 
 ## Current tasks:
 
-1. Handle exceptions.
+0. Write good verilator testbenches.
+1. Implement verilog for stalling.
 2. Handle interrupts.
-3. Write verilator testbenches.
 
 ## Roadmap:
 
