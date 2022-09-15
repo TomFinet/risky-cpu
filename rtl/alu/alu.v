@@ -2,18 +2,16 @@
 
 module alu (
     input clock,
-    input enable,
    
-    input [3:0] func,
+    input [3:0] alu_op,
 
     input [31:0] a, b,
 
 	output [31:0] res
 );
 
-    always @(posedge clock && enable) begin
-        
-        case (func)
+    always @(posedge clock) begin
+        case (alu_op)
             ADD     : res <= a + b;
             LT      : res <= $signed(a) < $signed(b);
             LTU     : res <= a < b;
