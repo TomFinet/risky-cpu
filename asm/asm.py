@@ -101,7 +101,7 @@ reg = {
     "t6"   : 0b11111, #
 }
 
-TEXT, DATA, MEM_SIZE = 0, 1, 10
+TEXT, DATA, MEM_SIZE = 0, 1, 1024
 mem = [0 for _ in range(MEM_SIZE)]
 addr = 0
 
@@ -190,7 +190,6 @@ with open(progf) as f:
     for l in f:
 
         l = l.strip()
-        print(l)
         if l == "":
             continue
 
@@ -423,8 +422,7 @@ with open(progf) as f:
             else: # error
                 None
             
-            print(inst)
             mem[addr] = inst
             addr += 1
 
-print(' '.join(['%08x' % b for b in mem]))
+print(' '.join(["{:032b}".format(b) for b in mem]))
