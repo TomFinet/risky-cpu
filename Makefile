@@ -1,7 +1,7 @@
-MODULE=cpu
+MODULE=machine
 
 MODULE_PATH=./rtl/$(MODULE).v
-TESTBENCH_PATH=./testbench/tb_$(MODULE).cpp
+TESTBENCH_PATH=./tb/tb_$(MODULE).cpp
 
 .PHONY:sim
 sim: waveform.vcd
@@ -16,7 +16,7 @@ build: obj_dir/V$(MODULE)
 waves: waveform.vcd
 	@echo
 	@echo "### WAVES ###"
-	gtkwave waveform.vcd
+	gtkwave machine_waveform.vcd
 
 waveform.vcd: ./obj_dir/V$(MODULE)
 	@echo
@@ -36,7 +36,7 @@ waveform.vcd: ./obj_dir/V$(MODULE)
 	@touch .stamp.verilate
 
 .PHONY:lint
-lint: $(MODULE).sv
+lint: $(MODULE).v
 	verilator --lint-only $(MODULE_PATH)
 
 .PHONY: clean
