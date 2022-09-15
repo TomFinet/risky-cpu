@@ -8,7 +8,7 @@ The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR
 
 To run the assembler run
 
-`python ./asm/asm.py ./asm/tests/fib.s > memory.list`
+`python ./asm/asm.py ./asm/tests/{your_asm_here}.s > memory.list`
 
 and to run the machine, simply run `make` followed by `make waves` if you want gtkwave to display the signals over time.
 
@@ -31,3 +31,5 @@ and to run the machine, simply run `make` followed by `make waves` if you want g
 [RISC-V specifications](https://github.com/riscv/riscv-isa-manual/releases/tag/draft-20220723-10eea63)
 
 [MIT 6.004 Computational Structures, Spring 2017, Lectures](https://youtu.be/R0tFDXBZvKI)
+
+[lightcode's 8bit-computer github project](https://github.com/lightcode/8bit-computer)
