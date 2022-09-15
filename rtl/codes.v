@@ -84,3 +84,10 @@
 `define LOAD_HU 2
 `define LOAD_B  3
 `define LOAD_BU 4
+
+// branch select
+`define NO_BRANCH 1'b0
+`define BRANCH    1'b1
+
+// NOP instruction encoding
+`define NOP 32'b00000000000000000000000000000000
