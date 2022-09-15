@@ -10,7 +10,7 @@
 
 #include "Vmachine.h"
 
-const uint64_t MAX_SIM_TIME = 100;
+const uint64_t MAX_SIM_TIME = 1000;
 
 uint64_t sim_time = 0;
 uint64_t posedge_cnt = 0;
@@ -47,13 +47,11 @@ int main(int argc, char **argv) {
 		if(machine->clock == 1) {
 			posedge_cnt++;
 			
-			machine_reset();
-
-            
+			machine_reset();            
 		}
 
 		machine->eval();
-		
+
 		m_trace->dump(sim_time);
 		sim_time++;
 	}
