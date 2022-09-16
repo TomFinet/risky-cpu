@@ -6,8 +6,7 @@
 
 module machine (
     input clock,
-    input reset,
-    input halt
+    input reset
 );
 
     reg [31:0] inst_aout;
@@ -20,7 +19,6 @@ module machine (
 
 	cpu cpu_module (
 		.reset     ( reset ),
-		.halt      ( halt ),
 		.clock     ( clock ),
 
         .inst_aout ( inst_aout ),
