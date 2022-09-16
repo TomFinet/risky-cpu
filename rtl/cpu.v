@@ -15,7 +15,6 @@
 
 module cpu (
 	input reset,
-    input halt,
     input clock,
 
     output reg [31:0] inst_aout,
@@ -207,6 +206,12 @@ module cpu (
     end
 
     always @(posedge clock) begin
+        /* Fetch instruction */
+        pc_load <= 1;
+        inst_aout  <= pc;
+        ir_pipe[0] <= inst_din; 
+
+        /* Pipeline */
         pc_pipe[0] <= pc;
         pc_pipe[1] <= pc_pipe[0];
         pc_pipe[2] <= pc_pipe[1];
