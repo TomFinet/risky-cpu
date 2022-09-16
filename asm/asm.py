@@ -192,7 +192,7 @@ with open(progf) as f:
         l = l.strip()
         if l == "":
             continue
-
+        
         kw = l.split()
         if kw[0][-1] == ":":
             labels[kw[0].rstrip(":")] = addr
@@ -425,4 +425,4 @@ with open(progf) as f:
             mem[addr] = inst
             addr += 1
 
-print(' '.join(["{:032b}".format(b) for b in mem]))
+print('\n'.join(["{:032b}".format(b) for b in mem]))
