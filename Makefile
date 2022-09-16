@@ -1,7 +1,7 @@
 MODULE=machine
 
 MODULE_PATH=./rtl/$(MODULE).v
-TESTBENCH_PATH=./tb/tb_$(MODULE).cpp
+TESTBENCH_PATH=./tb/$(MODULE)_tb.cpp
 
 .PHONY:sim
 sim: waveform.vcd
@@ -44,4 +44,3 @@ clean:
 	rm -rf .stamp.*;
 	rm -rf ./obj_dir
 	rm -rf waveform.vcd
-
