@@ -29,11 +29,12 @@ module register_bank(
 	 */
 	reg[31:0] r[31:0];
 
+    assign r[0] = 0;
     assign rs1_val = r[rs1];
     assign rs2_val = r[rs2];
 
 	always @(posedge clock) begin
-		if(we) begin
+		if(we && ain !== 5'b00000) begin
 			r[ain] <= din;
         end
 	end
