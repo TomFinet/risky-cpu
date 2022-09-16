@@ -22,7 +22,7 @@ always @(posedge clock) begin
     end
     else if(load) begin
         case (pc_sel)
-            `PC_PLUS_4 : pc <= pc + 4;
+            `PC_PLUS_4 : pc <= pc + 1;
             `PC_JAL    : pc <= jal;
             `PC_JALR   : pc <= jalr;
             `PC_BRANCH : pc <= branch;
