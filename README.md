@@ -10,13 +10,13 @@ To run the assembler run
 
 `python ./asm/asm.py ./asm/tests/{your_asm_here}.s > memory.list`
 
-and to run the machine, simply run `make` followed by `make waves` if you want gtkwave to display the signals over time.
+and to simulate the machine, simply run `make`.
 
 ## Current tasks:
 
-0. Write good verilator testbenches.
 1. Implement verilog for stalling.
-2. Handle interrupts.
+2. Write good verilator testbenches and simulator.
+3. Handle interrupts.
 
 ## Roadmap:
 
@@ -33,3 +33,5 @@ and to run the machine, simply run `make` followed by `make waves` if you want g
 [MIT 6.004 Computational Structures, Spring 2017, Lectures](https://youtu.be/R0tFDXBZvKI)
 
 [lightcode's 8bit-computer github project](https://github.com/lightcode/8bit-computer)
+
+[ZipCPU blog on Verilator](http://zipcpu.com/blog/2017/06/21/looking-at-verilator.html)
