@@ -35,6 +35,9 @@ waveform.vcd: ./obj_dir/V$(MODULE)
 	verilator --trace --x-assign unique --x-initial unique -cc $(MODULE_PATH) --exe $(TESTBENCH_PATH)
 	@touch .stamp.verilate
 
+assemble:
+	python asm/asm.py asm/tests/easy.s > memory.list
+
 .PHONY:lint
 lint: $(MODULE).v
 	verilator --lint-only $(MODULE_PATH)
