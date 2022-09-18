@@ -1,7 +1,8 @@
 MODULE=machine
+ASM=easy
 
 MODULE_PATH=./rtl/$(MODULE).v
-TESTBENCH_PATH=./tb/$(MODULE)_tb.cpp
+TESTBENCH_PATH=./sim/$(MODULE)_sim.cpp
 
 .PHONY:sim
 sim: waveform.vcd
@@ -13,10 +14,10 @@ verilate: .stamp.verilate
 build: obj_dir/V$(MODULE)
 
 .PHONY:waves
-waves: waveform.vcd
+waves: machine_trace.vcd
 	@echo
 	@echo "### WAVES ###"
-	gtkwave machine_waveform.vcd
+	gtkwave machine_trace.vcd
 
 waveform.vcd: ./obj_dir/V$(MODULE)
 	@echo
@@ -36,7 +37,7 @@ waveform.vcd: ./obj_dir/V$(MODULE)
 	@touch .stamp.verilate
 
 assemble:
-	python asm/asm.py asm/tests/easy.s > memory.list
+	python asm/asm.py asm/tests/$(ASM).s > memory.list
 
 .PHONY:lint
 lint: $(MODULE).v
