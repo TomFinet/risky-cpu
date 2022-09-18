@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define b(x) int_to_binary(x)
+#define b(x) int_to_bstring(x)
 
-const char* int_to_binary(uint x) {
+const char* int_to_bstring(uint x) {
     static char b[sizeof(x)*8] = {0};
     int y;
     long long z;
