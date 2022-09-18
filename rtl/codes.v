@@ -93,6 +93,11 @@
 `define YES_BRANCH 1'b1
 
 // NOP instruction encoding
-`define NOP 32'b00000000000000000000000000000000
+`define NOP 32'h00000000
+
+`define ZERO_REG 5'b00000
+
+`define IR_SEL_NOP  1'b0
+`define IR_SEL_INST 1'b1
 
 `endif
