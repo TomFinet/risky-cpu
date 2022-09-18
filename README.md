@@ -12,9 +12,17 @@ To run the assembler run
 
 and to simulate the machine, simply run `make`.
 
+## Supported instructions:
+
+Throughout this section we denote the contents stored at a particular register `xs` as `[xs]`.
+
+| Instruction       | Description |
+|-------------------|-------------|
+| `addi xd, xs, imm`| Adds the 12-bit immediate `imm` to `[xs]` and stores the result in `xd`. |
+
 ## Current tasks:
 
-1. Implement verilog for stalling.
+1. Implement logic for control hazard stalling.
 2. Write good verilator testbenches.
 3. Handle interrupts.
 
