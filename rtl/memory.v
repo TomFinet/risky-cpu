@@ -2,22 +2,24 @@
 `define MEMORY
 
 module memory (
-    input clock,
+    input wire clock,
     
-    input [31:0] inst_ain, // for instruction reading
-    output reg [31:0] inst_dout,
+    input wire [31:0] inst_ain, // for instruction reading
 
-	input rw,
-	input [31:0] ain,
-	input [31:0] din,
-	output reg [31:0] dout
+	input wire        rw,
+	input wire [31:0] ain,
+	input wire [31:0] din,
+
+    output reg [31:0]  inst_dout,
+	output reg [31:0]  dout
 );
 
 // 1024 x 32-bit = memory
 reg [31:0] mem[1023:0];
 
 always @(posedge clock) begin
-    inst_dout <= mem[inst_ain];
+    
+    inst_dout = mem[inst_ain];
 
     if(rw) begin
         mem[ain] <= din;
