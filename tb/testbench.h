@@ -24,13 +24,6 @@ template<class MODULE> class TestBench {
 		m_core = NULL;
 	}
 
-	virtual void reset() {
-		m_core->reset = 1;
-		// Make sure any inheritance gets applied
-		this->tick();
-		m_core->reset = 0;
-	}
-
 	virtual void tick() {
 		// Increment our own internal time reference
 		m_tickcount++;
@@ -41,15 +34,31 @@ template<class MODULE> class TestBench {
 		m_core->clock = 0;
 		m_core->eval();
 
+        if(m_trace) m_trace->dump(10*m_tickcount-2);
+
 		// Toggle the clock
 
 		// Rising edge
 		m_core->clock = 1;
 		m_core->eval();
 
+        if(m_trace) m_trace->dump(10*m_tickcount);
+
 		// Falling edge
 		m_core->clock = 0;
 		m_core->eval();
+
+        if (m_trace) {
+			// This portion, though, is a touch different.
+			// After dumping our values as they exist on the
+			// negative clock edge ...
+			m_trace->dump(10*m_tickcount+5);
+			//
+			// We'll also need to make sure we flush any I/O to
+			// the trace file, so that we can use the assert()
+			// function between now and the next tick if we want to.
+			m_trace->flush();
+		}
 	}
 
 	virtual bool done() { 
