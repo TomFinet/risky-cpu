@@ -1,5 +1,11 @@
 # Risky CPU:
 
+### Note:
+
+The CPU is currently being developed and thus is not fully functional yet. There are pipeline errors to solve, always more.
+
+## About
+
 This project defines a Verilog model for a CPU which implements a subset of the RISC-V 32-bit architecture. The models are tested using Verilator, a cycle-based simulator.
 
 <img src='./cpu_block_diagram.jpg'/>
