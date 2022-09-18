@@ -5,17 +5,17 @@
 `include "./rtl/memory.v"
 
 module machine (
-    input clock,
-    input reset
+    input wire clock,
+    input wire reset
 );
 
-    reg [31:0] inst_aout;
-    reg [31:0] inst_din;
+    wire [31:0] inst_aout;
+    wire [31:0] inst_din;
 
-    reg mem_rw;
-    reg [31:0] mem_aout;
-    reg [31:0] mem_dout;
-    reg [31:0] mem_din;
+    wire mem_rw;
+    wire [31:0] mem_aout;
+    wire [31:0] mem_dout;
+    wire [31:0] mem_din;
 
 	cpu cpu_module (
 		.reset     ( reset ),
