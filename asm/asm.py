@@ -390,11 +390,11 @@ with open(progf) as f:
                 curr_inst == "lb"  or
                 curr_inst == "lbu"
             ):
-                rs = get_reg(kw[3])
+                rs = get_reg(kw[2])
                 rd = get_reg(kw[1])
-                # curr_inst rd, func3, rs, c
+                # curr_inst rd, rs, c
                 inst = build_I_type([
-                    kw[4],
+                    kw[3],
                     rs,
                     function[curr_inst],
                     rd,
@@ -406,8 +406,8 @@ with open(progf) as f:
                 curr_inst == "sh"  or
                 curr_inst == "sb"              
             ):
-                rs1 = get_reg(kw[1])
-                rs2 = get_reg(kw[2])
+                rs1 = get_reg(kw[2])
+                rs2 = get_reg(kw[1])
 
                 # curr_inst rs2, rs1, imm12
                 inst = build_S_type([
