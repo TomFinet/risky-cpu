@@ -16,9 +16,12 @@ and to simulate the machine, simply run `make`.
 
 Throughout this section we denote the contents stored at a particular register `xs` as `[xs]`.
 
-| Instruction       | Description |
-|-------------------|-------------|
-| `addi xd, xs, imm`| Adds the 12-bit immediate `imm` to `[xs]` and stores the result in `xd`. |
+| Instruction        | Description |
+|--------------------|-------------|
+| `addi xd, xs, imm` | Adds the sign-extended immediate `imm` to `[xs]` and stores the result in `xd`. |
+| `slti xd, xs, imm` | Sets `xd` to 1 if `[xs]` is less than the sign-extended immediate `imm`. |
+| `sltiu xd, xs, imm`| Same as `slti` but where `[xd]` and `imm` are unsigned. |
+| `andi xd, xs, imm` | Stores the bitwise and of `[xs]` and `imm` in `xd`. | 
 
 ## Current tasks:
 
