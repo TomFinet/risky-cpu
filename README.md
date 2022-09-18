@@ -6,11 +6,13 @@ This project defines a Verilog model for a CPU which implements a subset of the 
 
 The CPU implements a 5-stage pipeline: instruction fetch (IF), register read (RR), arithmetic (ALU), memory (MEM) and write-back (WB). Data and control hazards are handled by stalling. For the case of control hazards, when a branch or jump instruction is detected, we stall the pipeline until its outcome is determined in the ALU stage. This is achieved by inserting two NOP operations into the pipeline.
 
+## How to simulate:
+
 To run the assembler run
 
 `python ./asm/asm.py ./asm/tests/{your_asm_here}.s > memory.list`
 
-and to simulate the machine, simply run `make`.
+To simulate the machine, simply run `make`. If you want to use gtkwave to take a peek at the signals run `make waves`.
 
 ## Supported instructions:
 
