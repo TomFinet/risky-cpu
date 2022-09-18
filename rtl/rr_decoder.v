@@ -7,6 +7,8 @@ module rr_decoder (
     input wire clock,
 
     input wire [31:0] inst,
+    
+    output reg [31:0] inst_out,
 
     output reg [4:0]  rs1,
     output reg [4:0]  rs2,
@@ -14,13 +16,22 @@ module rr_decoder (
 
     output reg [1:0]  pc_sel,
     output reg [1:0]  a_sel,
-    output reg        b_sel
+    output reg        b_sel,
+    output reg [4:0]  rd,
+    output reg        stall
 );
 
 always @(posedge clock) begin
 
-    rs1 <= inst[19:15];
-    rs2 <= inst[24:20];
+    inst_out <= inst;
+    rd       <= inst[11:7];
+    rs1      <= inst[19:15];
+    rs2      <= inst[24:20];
+    stall    <= (
+                    inst[6:0] == `BRANCH ||
+                    inst[6:0] == `JAL ||
+                    inst[6:0] == `JALR
+                );
 
     case (inst[6:0])
         `OP_IMM: begin

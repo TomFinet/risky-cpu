@@ -7,20 +7,32 @@ module alu_decoder (
     input wire clock,
 
     input wire [31:0] inst,
+    output reg [31:0] inst_out,
+
+    output reg [3:0]  alu_op,
 
     output reg [31:0] imm,
-    output reg [3:0]  alu_op
+    output reg [4:0]  rd,
+    output reg        stall
 );
 
 always @(posedge clock) begin
 
-    imm    <= {
-                {20{inst[31]}},
-                inst[7],
-                inst[30:25],
-                inst[11:8],
-                1'b0
-            };
+    inst_out <= inst;
+    imm      <= {
+                    {20{inst[31]}},
+                    inst[7],
+                    inst[30:25],
+                    inst[11:8],
+                    1'b0
+                };
+
+    rd       <= inst[11:7];
+    stall    <= (
+                    inst[6:0] == `BRANCH ||
+                    inst[6:0] == `JAL ||
+                    inst[6:0] == `JALR
+                );
 
     case (inst[6:0])
         `OP_IMM:  begin
