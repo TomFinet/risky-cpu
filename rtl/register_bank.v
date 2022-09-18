@@ -5,15 +5,15 @@
  */
 
 module register_bank(
-	input clock,
+	input wire clock,
 
-	input        we,
-	input [4:0]  ain,
-	input [31:0] din,
+	input wire        we,
+	input wire [4:0]  ain,
+	input wire [31:0] din,
 
 	// read both of these registers
-	input [4:0] rs1,
-	input [4:0] rs2,
+	input wire [4:0] rs1,
+	input wire [4:0] rs2,
 
 	output wire [31:0] rs1_val,
 	output wire [31:0] rs2_val
@@ -29,12 +29,12 @@ module register_bank(
 	 */
 	reg[31:0] r[31:0];
 
-    assign r[0] = 0;
     assign rs1_val = r[rs1];
     assign rs2_val = r[rs2];
 
 	always @(posedge clock) begin
-		if(we && ain !== 5'b00000) begin
+		r[0] <= 0;
+        if(we && ain != 5'b00000) begin
 			r[ain] <= din;
         end
 	end
