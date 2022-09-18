@@ -15,7 +15,7 @@ and to simulate the machine, simply run `make`.
 ## Current tasks:
 
 1. Implement verilog for stalling.
-2. Write good verilator testbenches and simulator.
+2. Write good verilator testbenches.
 3. Handle interrupts.
 
 ## Roadmap:
