@@ -1,11 +1,5 @@
 # Risky CPU:
 
-### Note:
-
-The CPU is currently being developed and thus is not fully functional yet. There are pipeline errors to solve, always more.
-
-## About
-
 This project defines a Verilog model for a CPU which implements a subset of the RISC-V 32-bit architecture. The models are tested using Verilator, a cycle-based simulator.
 
 <img src='./cpu_block_diagram.jpg'/>
@@ -30,10 +24,6 @@ Throughout this section we denote the contents stored at a particular register `
 | `slti xd, xs, imm` | Sets `xd` to 1 if `[xs]` is less than the sign-extended immediate `imm`. |
 | `sltiu xd, xs, imm`| Same as `slti` but where `[xd]` and `imm` are unsigned. |
 | `andi xd, xs, imm` | Stores the bitwise and of `[xs]` and `imm` in `xd`. | 
-
-## Bugs:
-
-1. Stalling works, but skips the next instruction immediately following. We do not want this.
 
 ## Roadmap:
 
