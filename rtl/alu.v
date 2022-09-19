@@ -4,41 +4,30 @@
 `include "./rtl/codes.v"
 
 module alu (
-    input wire clock,
-   
     input wire [3:0] alu_op,
-
     input wire [31:0] a, b,
 
-	output reg [31:0] res,
-    output reg cond
+	output wire [31:0] res,
+    output wire cond
 );
 
-    always @(posedge clock) begin
-        case (alu_op)
-            `ADD     : res <= a + b;
-            `LT      : cond <= $signed(a) < $signed(b);
-            `LTU     : cond <= a < b;
-            `AND     : res <= a & b;
-            `OR      : res <= a | b;
-            `XOR     : res <= a ^ b;
-            `SLL     : res <= a << b;
-            `SRL     : res <= a >> b;
-            `SUB     : res <= a - b;
-            `SRA     : res <= a >>> b;
-            
-            `EQ      : cond <= a == b;
-            `NE      : cond <= a != b;
-            `GE      : cond <= $signed(a) >= $signed(b);
-            `GEU     : cond <= a >= b;
-
-            default : begin
-                res  <= 0;
-                cond <= 0;
-            end
-        endcase
-
-    end
+    assign res =
+                (alu_op == `ADD) ? a + b   :
+                (alu_op == `AND) ? a & b   :
+                (alu_op == `OR ) ? a | b   :
+                (alu_op == `XOR) ? a ^ b   :
+                (alu_op == `SLL) ? a << b  :
+                (alu_op == `SRL) ? a >> b  :
+                (alu_op == `SUB) ? a - b   :
+                (alu_op == `SRA) ? a >>> b : 0;
+    
+    assign cond =
+                (alu_op == `LT  ) ? $signed(a) < $signed(b)  :
+                (alu_op == `LTU ) ? a < b                    :
+                (alu_op == `EQ  ) ? a == b                   :
+                (alu_op == `NE  ) ? a != b                   :
+                (alu_op == `GE  ) ? $signed(a) >= $signed(b) :
+                (alu_op == `GEU ) ? a >= b                   : 0;
 
 endmodule
 
