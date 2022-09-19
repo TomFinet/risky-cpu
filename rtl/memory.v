@@ -3,6 +3,7 @@
 
 module memory (
     input wire clock,
+    input wire reset,
     
     input wire [31:0] inst_ain, // for instruction reading
 
@@ -17,15 +18,25 @@ module memory (
 // 1024 x 32-bit = memory
 reg [31:0] mem[1023:0];
 
-always @(posedge clock) begin
-    
-    inst_dout = mem[inst_ain];
 
-    if(rw) begin
-        mem[ain] <= din;
+always @(posedge clock) begin
+    if (reset) begin
+        integer i;
+        for(i = 0; i < 1024; i++) begin
+            mem[i] = 0;
+        end
+
+        inst_dout = 0;
     end
     else begin
-        dout <= mem[ain];
+        inst_dout = mem[inst_ain];
+        
+        if(rw) begin
+            mem[ain] <= din;
+        end
+        else begin
+            dout <= mem[ain];
+        end
     end
 end
 
