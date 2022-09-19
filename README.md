@@ -31,14 +31,13 @@ Throughout this section we denote the contents stored at a particular register `
 | `sltiu xd, xs, imm`| Same as `slti` but where `[xd]` and `imm` are unsigned. |
 | `andi xd, xs, imm` | Stores the bitwise and of `[xs]` and `imm` in `xd`. | 
 
-## Current tasks:
+## Bugs:
 
-1. Implement logic for control hazard stalling.
-2. Write good verilator testbenches.
-3. Handle interrupts.
+1. Stalling works, but skips the next instruction immediately following. We do not want this.
 
 ## Roadmap:
 
+0. Add exception and interrupt support.
 1. Add an MMU and virtual memory support.
 2. Code a bootloader.
 3. Write a basic OS that supports multiple processes (need interrupts, scheduler).
