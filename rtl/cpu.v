@@ -226,35 +226,35 @@ module cpu (
                         alu_pc_sel == `PC_BRANCH
                     ) ? alu_pc_sel : rr_pc_sel;
 
-    always @(posedge clock) begin
+    always @(posedge pc_on) begin
         if (reset) begin
             pc <= 0;
         end
         else begin
-            if (!stall) begin
-                case (pc_sel)
-                    `PC_PLUS_1     : pc <= pc + 1;
-                    `PC_BRANCH     : pc <= branch;
-                    `PC_JUMP       : pc <= alu_res;
-                    default        : pc <= pc + 1;
-                endcase
-            end
-
-            /* Pipeline */
-            pc_pipe[0] <= pc;
-            pc_pipe[1] <= pc_pipe[0];
-            pc_pipe[2] <= pc_pipe[1];
-            pc_pipe[3] <= pc_pipe[2];
-
-            a_pipe     <= a;
-            b_pipe     <= b; 
-
-            d_pipe[0]  <= rs2_val;
-            d_pipe[1]  <= d_pipe[0];
-
-            r_pipe[0]  <= alu_res;
-            r_pipe[1]  <= r_pipe[0];
+            case (pc_sel)
+                `PC_PLUS_1     : pc <= pc + 1;
+                `PC_BRANCH     : pc <= branch;
+                `PC_JUMP       : pc <= alu_res;
+                default        : pc <= pc + 1;
+            endcase
         end
+    end
+
+    always @(posedge clock) begin   
+        /* Pipeline */
+        pc_pipe[0] <= pc;
+        pc_pipe[1] <= pc_pipe[0];
+        pc_pipe[2] <= pc_pipe[1];
+        pc_pipe[3] <= pc_pipe[2];
+
+        a_pipe     <= a;
+        b_pipe     <= b; 
+
+        d_pipe[0]  <= rs2_val;
+        d_pipe[1]  <= d_pipe[0];
+
+        r_pipe[0]  <= alu_res;
+        r_pipe[1]  <= r_pipe[0];
     end
 
 endmodule
