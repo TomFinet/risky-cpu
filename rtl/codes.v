@@ -42,10 +42,9 @@
 `define GEU  4'b1101
 
 // PC select
-`define PC_PLUS_4 2'b00
-`define PC_JAL    2'b01
-`define PC_JALR   2'b10
-`define PC_BRANCH 2'b11
+`define PC_PLUS_1 2'b00
+`define PC_JUMP   2'b01
+`define PC_BRANCH 2'b10
 
 // Register write enable
 `define REG_NO_WRITE 1'b0
