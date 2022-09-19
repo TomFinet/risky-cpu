@@ -1,5 +1,8 @@
 MODULE=machine
-ASM=easy
+#ASM=store_load
+#ASM=no_hazard_pipeline
+ASM=data_hazard_pipeline
+#ASM=control_hazard_pipeline
 
 MODULE_PATH=./rtl/$(MODULE).v
 TESTBENCH_PATH=./sim/$(MODULE)_sim.cpp
