@@ -3,6 +3,8 @@
 #   0. Add error checking
 #   1. Add .data section
 
+from atexit import register
+from email.mime import base
 import re
 import sys
 
@@ -130,6 +132,10 @@ def get_reg(r):
     else:
         return 0
 
+# sign extended
+def sext(n, bits):
+    return n & int("1" * bits, 2)
+
 def build_R_type(instr):
     [func7, rs2, rs1, func3, rd, op] = map(base_int, instr)
     inst = func7 << REG_SIZE
@@ -142,6 +148,14 @@ def build_R_type(instr):
 
 def build_I_type(instr):
     [imm, rs, func3, rd, op] = map(base_int, instr)
+
+    if (
+        func3 != function["slli"] and
+        func3 != function["srli"] and
+        func3 != function["srai"]
+    ):
+        imm = sext(imm, 12)
+
     inst = imm << REG_SIZE
     inst = (inst + rs) << FUNC3_SIZE
     inst = (inst + func3) << REG_SIZE
@@ -179,8 +193,18 @@ def build_U_type(instr):
     return inst
 
 def build_J_type(instr):
-    [imm20, rd, op] = map(base_int, instr)
-    inst = imm20 << REG_SIZE
+    [imm, rd, op] = map(base_int, instr)
+
+    imm = sext(base_int(imm), 20)
+    imm1a = imm >> 19
+    imm10 = (imm & 0b11111111111) >> 1
+    imm1b = (imm >> 10) & 0b1
+    imm8  = (imm >> 11) & 0b11111111
+
+    inst = imm1a << 10
+    inst = (inst + imm10) << 1
+    inst = (inst + imm1b) << 8
+    inst = (inst + imm8)  << REG_SIZE 
     inst = (inst + rd) << OPCODE_SIZE
     inst = inst + op
     return inst
@@ -224,9 +248,9 @@ with open(progf) as f:
                 # addi x0, x0, 0
                 inst = build_I_type([
                     0, 
-                    0, 
+                    reg["zero"], 
                     function["addi"],
-                    0,
+                    reg["zero"],
                     opcode["op_imm"]
                 ])
                 
@@ -329,7 +353,7 @@ with open(progf) as f:
             
             elif curr_inst == "jal":
                 rd = get_reg(kw[1])
-                
+
                 # jal rd, offset20
                 inst = build_J_type([
                     kw[2],
@@ -354,8 +378,8 @@ with open(progf) as f:
                 # jmp offset
                 offset = kw[1]
                 if offset in labels:
-                    offset = labels[offset]
-                
+                    offset = labels[offset] - addr
+
                 inst = build_J_type([
                     offset,
                     reg["zero"],
@@ -373,13 +397,18 @@ with open(progf) as f:
                 rs1 = get_reg(kw[1])
                 rs2 = get_reg(kw[2])
 
+                imm = sext(base_int(kw[3]), 12)
+
+                # NEED FIXING THE IMMEDIATE ENCODING
                 # curr_inst rs1, rs2, offset
                 inst = build_B_type([
-                    base_int(kw[3]) & 127, # last 7 bits
+                    imm >> 11, # first bit
+                    (imm >> 4) & 0b00111111,
                     rs2,
                     rs1,
                     function[curr_inst],
-                    base_int(kw[3]) & 4160749568, # 111110...0 in decimal to get first 5 bits
+                    (imm & 0b11111) >> 1,
+                    (imm >> 10) & 0b01,
                     opcode["branch"]
                 ])
 
@@ -409,13 +438,16 @@ with open(progf) as f:
                 rs1 = get_reg(kw[2])
                 rs2 = get_reg(kw[1])
 
+                imm = sext(base_int(kw[3]), 12)
+
+                # fix this IMM ENCODING TOO
                 # curr_inst rs2, rs1, imm12
                 inst = build_S_type([
-                    base_int(kw[3]) & 127, # last 7 bits
+                    imm >> 5, # first 7 bits
                     rs2,
                     rs1,
                     function[curr_inst],
-                    base_int(kw[3]) & 4160749568, # first 5 bits
+                    imm & 0b11111, # last 5 bits
                     opcode["store"],
                 ])
 
