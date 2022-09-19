@@ -17,7 +17,7 @@ module machine (
     wire [31:0] mem_dout;
     wire [31:0] mem_din;
 
-	cpu cpu_module (
+	cpu cpu_m (
 		.reset     ( reset ),
 		.clock     ( clock ),
 
@@ -30,8 +30,9 @@ module machine (
         .mem_din   ( mem_din )
     );
 
-    memory memory_module (
+    memory memory_m (
         .clock     ( clock ),
+        .reset     ( reset ),
         
         .inst_ain  ( inst_aout ),
         .inst_dout ( inst_din ),
