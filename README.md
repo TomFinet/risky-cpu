@@ -72,6 +72,13 @@ For brievity, we denote the 32-bit sign-extended value of the immediate `imm` as
 | `lw xd, xs, imm` | Copies the value at memory address `[xs] + sext(imm)` into `xd`. |
 | `sw xs, xb, imm` | Stores `[xs]` into memory at address `[xb] + sext(imm)`. |
 
+### Pseudo-instructions
+
+| Pseudo-instruction | Instruction | Description |
+|--------------------|-------------|-------------|
+| `nop` | `addi, x0, x0, 0` | Does not change the internal state of the CPU except for incrementing the `pc`. |
+| `mov xd, xs` | `addi xd, xs, 0` | Moves `[xs]` into `xd`. |
+
 ## Roadmap:
 
 0. Add an end instruction so that simulator can run until it hits it.
