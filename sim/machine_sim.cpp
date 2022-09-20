@@ -13,9 +13,16 @@
 
 class Machine_Sim : public TestBench<Vmachine> {
 
-    const static int MAX_TICKS = 20;
+    const static int MAX_TICKS = 30;
+    const static std::string progfile = "memory.list";
 
     public:
+
+    void init() {
+        opentrace("machine_trace.vcd");
+        reset();
+        loadProgram(progfile);
+    }
 
     virtual void reset() {
 		m_core->reset = 1;
@@ -46,6 +53,9 @@ class Machine_Sim : public TestBench<Vmachine> {
 
     virtual void tick() {
         TestBench<Vmachine>::tick();
+
+        // add some printing of internals
+        
     }
 };
 
@@ -54,34 +64,21 @@ int main(int argc, char **argv) {
     Verilated::commandArgs(argc, argv);
 	Machine_Sim *tb = new Machine_Sim();
 
-    tb->opentrace("machine_trace.vcd");
-    tb->reset();
-
-    std::string progfile = "memory.list";
-    tb->loadProgram(progfile);
-    
-    //tb->m_core->machine__DOT__cpu_m__DOT__register_bank_m__DOT__r[1] = 63;
-
-    // dump memory contents
-    for(int i = 0; i < 1024; i++) {
-        uint32_t data = tb->m_core->machine__DOT__memory_m__DOT__mem[i];
-        if(data != 0) printf("%s\n", b(data));
-    }
-    printf("\n");
+    tb->init();
 
 	while(!tb->done()) {
 		tb->tick();
 	}
 
-    for(int i = 0; i < 1024; i++) {
-        printf("mem[%d]: %s\n", i, b(tb->m_core->machine__DOT__memory_m__DOT__mem[i]));
-    }
-    printf("\n\n");
-
     for(int i = 0; i < 32; i++) {
         printf("x%d: %s\n", i, b(tb->m_core->machine__DOT__cpu_m__DOT__register_bank_m__DOT__r[i]));
     }
     printf("\n");
+
+    for(int i = 0; i < 1024; i++) {
+        printf("mem[%d]: %s\n", i, b(tb->m_core->machine__DOT__memory_m__DOT__mem[i]));
+    }
+    printf("\n\n");
 
     delete tb;
     exit(EXIT_SUCCESS);
