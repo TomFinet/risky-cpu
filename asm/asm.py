@@ -48,8 +48,8 @@ function = {
 
     "beq"   : 0b010,
     "bne"   : 0b011,
-    "ble"   : 0b100,
-    "bleu"  : 0b101,
+    "bge"   : 0b100,
+    "bgeu"  : 0b101,
 
     "blt"   : 0b001,
     "bltu"  : 0b010,
