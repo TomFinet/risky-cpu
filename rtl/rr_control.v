@@ -39,7 +39,14 @@ always @(posedge clock) begin
 
         case (inst[6:0])
             `OP_IMM: begin
-                imm <= {{20{inst[31]}}, inst[31:20]};
+                
+                if ({1'b0, inst[14:12]} == `LTU) begin
+                    imm <= {{20{1'b0}}, inst[31:20]};
+                end
+                else begin
+                    imm <= {{20{inst[31]}}, inst[31:20]};
+                end
+
                 pc_sel <= `PC_PLUS_1;
                 a_sel  <= `A_REG;
                 b_sel  <= `B_IMM;
