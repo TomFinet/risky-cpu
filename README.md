@@ -18,15 +18,32 @@ To simulate the machine, simply run `make`. If you want to use gtkwave to take a
 
 Throughout this section we denote the contents stored at a particular register `xs` as `[xs]`.
 
+### Instructions on immediates
+
+For brievity, we denote the 32-bit sign-extended value of the immediate `imm` as `sext(imm)`. Additionally, we write assume `imm` is a 12-bit value unless otherwise stated. Finally, we use the notation `{a, b}` to denote the concatenation of `a` and `b` and `a^b = {a, a, ..., a}` b times. For example `{011, 1001} = 0111001` and `{110, 0^5} = 11000000`. 
+
 | Instruction        | Description |
 |--------------------|-------------|
-| `addi xd, xs, imm` | Adds the sign-extended immediate `imm` to `[xs]` and stores the result in `xd`. |
-| `slti xd, xs, imm` | Sets `xd` to 1 if `[xs]` is less than the sign-extended immediate `imm`. |
-| `sltiu xd, xs, imm`| Same as `slti` but where `[xd]` and `imm` are unsigned. |
+| `addi xd, xs, imm` | Adds `sext(imm)` to `[xs]` and stores the result in `xd`. |
+| `slti xd, xs, imm` | Sets `xd` to 1 if signed `[xs]` is less than `sext(imm)`. |
+| `sltiu xd, xs, imm`| Same as `slti`, but where `[xd]` and `imm` are unsigned. |
 | `andi xd, xs, imm` | Stores the bitwise and of `[xs]` and `imm` in `xd`. | 
+| `ori xd, xs, imm` | Stores the bitwise or of `[xs]` and `imm` in `xd`. |
+| `xori xd, xs, imm` | Stores the bitwise exclusive-or of `[xs]` and `imm` in `xd`. |
+| `slli xd, xs, imm` | Stores the left `imm`-shift of `[xs]` in `xd`. |
+| `srli xd, xs, imm` | Same as `slli`, but with a right shift. |
+| `srai xd, xs, imm` | Stores the right `imm`-arithmetic shift of `[xs]` in `xd`. |
+| `lui xd, imm20` | Stores `{imm20, 0^12}` in `xd`. |
+| `auipc xd, imm20` | Adds `{imm20, 0^12}` to the address of the `auipc` instruction and stores the result in `xd`. |
+
+### Register-to-register instructions
+
+
 
 ## Roadmap:
 
+-2. Add an end instruction so that simulator can run until it hits it.
+-1. Add more pseudoinstructions to the assembler.
 0. Add exception and interrupt support.
 1. Add an MMU and virtual memory support.
 2. Code a bootloader.
