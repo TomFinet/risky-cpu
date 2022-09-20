@@ -14,14 +14,13 @@
 class Machine_Sim : public TestBench<Vmachine> {
 
     const static int MAX_TICKS = 30;
-    const static std::string progfile = "memory.list";
 
     public:
 
     void init() {
         opentrace("machine_trace.vcd");
         reset();
-        loadProgram(progfile);
+        loadProgram("memory.list");
     }
 
     virtual void reset() {
@@ -35,7 +34,7 @@ class Machine_Sim : public TestBench<Vmachine> {
         return m_tickcount > MAX_TICKS;
     }
 
-    void loadProgram(std::string  &progfile) {
+    void loadProgram(std::string  progfile) {
         // read program instructions into memory
         std::ifstream f;
         f.open(progfile);
